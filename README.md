@@ -1,1 +1,1 @@
-# checkmk-lmsensors
+# checkmk_lmsensors
