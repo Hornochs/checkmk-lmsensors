@@ -4,7 +4,7 @@ import sensors
 def print_stuff():
     for chip in sensors.get_detected_chips():
         for feature in chip.get_features():
-            print ("P {} count1={};65;75;0;100 Temperaturwert für {}".format(chip, chip.get_value(0), chip.get_label(feature)))    
+            print ("P {} count1={};65;75;0;100 Temperaturwert für {}".format(chip.get_label(feature).replace(" ", ""), chip.get_value(0), chip.get_label(feature)))    
 
 def main():
     print_stuff()
