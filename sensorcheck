@@ -4,13 +4,28 @@ import sensors
 def print_stuff():
     for chip in sensors.get_detected_chips():
         for feature in chip.get_features():
-            print ("P {} count1={};65;75;0;100 Temperaturwert für {}".format(chip.get_label(feature).replace(" ", ""), chip.get_value(0), chip.get_label(feature)))    
+            #initalize Array to have per Feature one Array
+            name = chip.get_label(feature)
+            work = []
+            work.append(name)
+            for subfeature in chip.get_all_subfeatures(feature):
+                #Add in this array now all Values, order: Current Temp, Warn Temp, Crit Temp
+                work.append(chip.get_value(subfeature.number))
+            #This while loop is needed, because some sensors doesn't provide max. Temp Values. Otherwise Printoutpuut would run into an issue
+            while (len(work) < 3):
+                #Adding 100 C° as max Value of nothing is provided
+                work.append(100)
+            #Creating CheckMK Print Output to recognize it. Replacing Spacebars in first Variable is necessary!
+            print ("P {} count1={};{};{};0;{} Temperaturwert für {}".format(work[0].replace(" ", ""), work[1],work[2]-10,work[2],work[2],work[0]))
 
 def main():
     print_stuff()
 
+
 if __name__ == '__main__':
     try:
         main()
+    except Exception as e:
+        print ("3 sensorchecks - Sensor Local Check not working!")
     finally:
         sensors.cleanup()
